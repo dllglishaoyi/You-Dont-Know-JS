@@ -29,23 +29,23 @@ function foo(a) {
 }
 ```
 
-In this snippet, the scope bubble for `foo(..)` includes identifiers `a`, `b`, `c` and `bar`. **It doesn't matter** *where* in the scope a declaration appears, the variable or function belongs to the containing scope bubble, regardless. We'll explore how exactly *that* works in the next chapter.
+在这段代码当中，`foo(..)`的作用域泡泡包含了标识符`a`, `b`, `c` 和 `bar`。不论在作用域的那个地方声明变量，变量和方法都属于这个作用域泡泡。这一点我们会在下一章具体讨论。
 
-`bar(..)` has its own scope bubble. So does the global scope, which has just one identifier attached to it: `foo`.
+`bar(..)`拥有它自己的作用域泡泡。全局作用域也有一个属于自己的泡泡，它只包含一个名叫`foo`的标识符。
 
-Because `a`, `b`, `c`, and `bar` all belong to the scope bubble of `foo(..)`, they are not accessible outside of `foo(..)`. That is, the following code would all result in `ReferenceError` errors, as the identifiers are not available to the global scope:
+因为`a`, `b`, `c`, 和 `bar`都属于`foo(..)`的作用域泡泡，他们是无法从`foo(..)`外面访问的。也就是说，以下的代码会引起`ReferenceError`报错，因为这些标识符是无法从全局作用域访问的：
 
 ```js
-bar(); // fails
+bar(); // 失败
 
-console.log( a, b, c ); // all 3 fail
+console.log( a, b, c ); // 三个都失败
 ```
 
-However, all these identifiers (`a`, `b`, `c`, `foo`, and `bar`) are accessible *inside* of `foo(..)`, and indeed also available inside of `bar(..)` (assuming there are no shadow identifier declarations inside `bar(..)`).
+然而, 所有的这些标识符 (`a`, `b`, `c`, `foo`, 和 `bar`)是可以从`foo(..)`的 *外部*访问的, 而且 `bar(..)`内部也可以访问 (假设`bar(..)`内没有声明覆盖他们).
 
-Function scope encourages the idea that all variables belong to the function, and can be used and reused throughout the entirety of the function (and indeed, accessible even to nested scopes). This design approach can be quite useful, and certainly can make full use of the "dynamic" nature of JavaScript variables to take on values of different types as needed.
+函数作用域鼓励一直思想：所有变量属于函数，函数内部（甚至在内部的嵌套作用域中）处处可以访问他们。这种设计方式是非常有用的，它可以把JavaScript按需处理不同类型值得动态特性发挥到极致。
 
-On the other hand, if you don't take careful precautions, variables existing across the entirety of a scope can lead to some unexpected pitfalls.
+另一方面，如果你疏于防范，存在于整个作用域中的变量会产生一些意想不到的隐患。
 
 ## Hiding In Plain Scope
 
