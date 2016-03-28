@@ -1,20 +1,17 @@
-# You Don't Know JS: Scope & Closures
-# Chapter 3: Function vs. Block Scope
-
 # 你不知道的JS:作用域和闭包
 # 第三章: 函数 vs. 块级作用域
 
-As we explored in Chapter 2, scope consists of a series of "bubbles" that each act as a container or bucket, in which identifiers (variables, functions) are declared. These bubbles nest neatly inside each other, and this nesting is defined at author-time.
+我们在第二章探索过，作用域由一系列“泡泡”组成，这些“泡泡”就像装着标识符（变量、方法）的桶。这些“泡泡”整齐地嵌套，并且这些嵌套在写代码时就定义好了。
 
-But what exactly makes a new bubble? Is it only the function? Can other structures in JavaScript create bubbles of scope?
+但到底是什么构造了一个新的泡泡？只能是函数吗？JavaScript中还有别的什么结构能创造作用域泡泡呢？
 
-## Scope From Functions
+## 函数作用域
 
-The most common answer to those questions is that JavaScript has function-based scope. That is, each function you declare creates a bubble for itself, but no other structures create their own scope bubbles. As we'll see in just a little bit, this is not quite true.
+对于这些问题，最普通的答案莫过于JavaScript拥有基于函数的作用域了。就是说，你声明的每个函数都为它自己创造了一个泡泡，但没别的结构能为自己创建泡泡了。我们来看看为什么这么说，尽管这不是特别准确。
 
-But first, let's explore function scope and its implications.
+首先，我们来看看函数作用域和它的实现。
 
-Consider this code:
+有如下代码：
 
 ```js
 function foo(a) {
