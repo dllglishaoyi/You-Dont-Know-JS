@@ -47,19 +47,19 @@ console.log( a, b, c ); // 三个都失败
 
 另一方面，如果你疏于防范，存在于整个作用域中的变量会产生一些意想不到的隐患。
 
-## Hiding In Plain Scope
+## 藏在作用域中
 
-The traditional way of thinking about functions is that you declare a function, and then add code inside it. But the inverse thinking is equally powerful and useful: take any arbitrary section of code you've written, and wrap a function declaration around it, which in effect "hides" the code.
+通常对函数的想法就是声明一个函数，然后再在其中加入代码。其实反过来也同样强大和有用：选择一段你写过的代码，然后用一个函数声明把它包裹起来，这样就“隐藏”了这段代码。
 
-The practical result is to create a scope bubble around the code in question, which means that any declarations (variable or function) in that code will now be tied to the scope of the new wrapping function, rather than the previously enclosing scope. In other words, you can "hide" variables and functions by enclosing them in the scope of a function.
+这样实际上是创造了一个环绕代码的作用域泡泡，也就是说，任何代码中的声明（变量和方法）现在都会被新的函数作用域包裹起来。换句话说，你可以通过用函数作用域包裹的方法吧变量“隐藏”起来。
 
-Why would "hiding" variables and functions be a useful technique?
+为什么说“隐藏”变量和函数是一种有用的技术呢？
 
-There's a variety of reasons motivating this scope-based hiding. They tend to arise from the software design principle "Principle of Least Privilege" [^note-leastprivilege], also sometimes called "Least Authority" or "Least Exposure". This principle states that in the design of software, such as the API for a module/object, you should expose only what is minimally necessary, and "hide" everything else.
+有几个原因。它们遵循了软件设计原则中的“最小权限原则”。在软件设计中，例如一个对象的API，这个原则表现为向外暴露最少量的东西以满足需求，然后隐藏其他所有的东西。
 
-This principle extends to the choice of which scope to contain variables and functions. If all variables and functions were in the global scope, they would of course be accessible to any nested scope. But this would violate the "Least..." principle in that you are (likely) exposing many variables or functions which you should otherwise keep private, as proper use of the code would discourage access to those variables/functions.
+这个原则扩展了用哪个作用域来包含变量和函数。如果所有的变量和函数都在全局作用域中，它们当然可以被所有的嵌套作用域访问。但这违背了“最小...”原则。这暴露了很多本该私有化的变量和方法，这种完全的用法会让变量/方法的访问变得不美。
 
-For example:
+例如:
 
 ```js
 function doSomething(a) {
@@ -76,10 +76,9 @@ var b;
 
 doSomething( 2 ); // 15
 ```
+在这段代码中 `b` 变量和 `doSomethingElse(..)` 方法从他们所做的事来看应该是“私有的”。把他们的入口暴露在外不但是不必要的，而且可能会是“危险”的，他们可能被一些不希望的方式有意无意地调用， 而且还可能打乱`doSomething(..)`执行的前提条件。
 
-In this snippet, the `b` variable and the `doSomethingElse(..)` function are likely "private" details of how `doSomething(..)` does its job. Giving the enclosing scope "access" to `b` and `doSomethingElse(..)` is not only unnecessary but also possibly "dangerous", in that they may be used in unexpected ways, intentionally or not, and this may violate pre-condition assumptions of `doSomething(..)`.
-
-A more "proper" design would hide these private details inside the scope of `doSomething(..)`, such as:
+把这些私密的细节隐藏在`doSomething(..)`的作用域中，将会是个更恰当的设计：、
 
 ```js
 function doSomething(a) {
@@ -96,31 +95,29 @@ function doSomething(a) {
 
 doSomething( 2 ); // 15
 ```
+现在，`b` 和 `doSomethingElse(..)` 无法从外部访问了,取而代之的是只能对 `doSomething(..)`的控制。这样做对功能性和结果并没有什么影响，但这种设计把细节私有化，这是一种更好的软件实践。
 
-Now, `b` and `doSomethingElse(..)` are not accessible to any outside influence, instead controlled only by `doSomething(..)`. The functionality and end-result has not been affected, but the design keeps private details private, which is usually considered better software.
+### 冲突避免
 
-### Collision Avoidance
+隐藏变量和方法的另一个好处就是可以避免两个同名标识符的冲突。这种冲突常常是因为意外覆盖了值以前的。
 
-Another benefit of "hiding" variables and functions inside a scope is to avoid unintended collision between two different identifiers with the same name but different intended usages. Collision results often in unexpected overwriting of values.
-
-For example:
+例如：
 
 ```js
 function foo() {
 	function bar(a) {
-		i = 3; // changing the `i` in the enclosing scope's for-loop
+		i = 3; // 改变了for循环中 `i` 的值
 		console.log( a + i );
 	}
 
 	for (var i=0; i<10; i++) {
-		bar( i * 2 ); // oops, infinite loop ahead!
+		bar( i * 2 ); // oops, 死循环!
 	}
 }
 
 foo();
 ```
-
-The `i = 3` assignment inside of `bar(..)` overwrites, unexpectedly, the `i` that was declared in `foo(..)` at the for-loop. In this case, it will result in an infinite loop, because `i` is set to a fixed value of `3` and that will forever remain `< 10`.
+在 `bar(..)`中`i = 3`的赋值意外覆盖了`foo(..)`中for循环里声明的`i`。此时，引发了一个死循环，因为`i`被赋予了一个固定值 `3` ，永远小于10
 
 The assignment inside `bar(..)` needs to declare a local variable to use, regardless of what identifier name is chosen. `var i = 3;` would fix the problem (and would create the previously mentioned "shadowed variable" declaration for `i`). An *additional*, not alternate, option is to pick another identifier name entirely, such as `var j = 3;`. But your software design may naturally call for the same identifier name, so utilizing scope to "hide" your inner declaration is your best/only option in that case.
 
