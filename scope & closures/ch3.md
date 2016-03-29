@@ -147,13 +147,13 @@ var MyReallyCoolLibrary = {
 
 你可能会注意到这些工具并没有什么可以摆脱词法作用域规则的魔法。它们只是运用了作用域规则来强制了标识符不能出现在共享的作用域中，保持标识符私有化，杜绝冲突污染的作用域，以此确保没有意外的作用域冲突。
 
-As such, you can code defensively and achieve the same results as the dependency managers do without actually needing to use them, if you so choose. See the Chapter 5 for more information about the module pattern.
+因此，你自己也可以写出像模块管理器一样的代码，如果你要这么做。在第五章的模块模式中会有更多信息。
 
-## Functions As Scopes
+## 作用域函数
 
-We've seen that we can take any snippet of code and wrap a function around it, and that effectively "hides" any enclosed variable or function declarations from the outside scope inside that function's inner scope.
+我们已经知道可以通过用函数包裹代码的方式有效地隐藏变量和方法。
 
-For example:
+例如:
 
 ```js
 var a = 2;
@@ -168,12 +168,11 @@ foo(); // <-- and this
 
 console.log( a ); // 2
 ```
+虽然这在技术上可行，但却不是一个好主意。这里有一些小问题。首先我们要声明一个名叫`foo()`的方法，这意味着叫做 `foo` 的标识符污染了它自己的作用域（这个例子中是全局作用域）。而且我们要明确地通过名字（`foo()`）来调用这个方法。
 
-While this technique "works", it is not necessarily very ideal. There are a few problems it introduces. The first is that we have to declare a named-function `foo()`, which means that the identifier name `foo` itself "pollutes" the enclosing scope (global, in this case). We also have to explicitly call the function by name (`foo()`) so that the wrapped code actually executes.
+试想一下如果这个方法不需要名字（或者名字不会污染作用域），而且它可以自动执行的话会怎么样呢。
 
-It would be more ideal if the function didn't need a name (or, rather, the name didn't pollute the enclosing scope), and if the function could automatically be executed.
-
-Fortunately, JavaScript offers a solution to both problems.
+幸运的是，JavaScript为这个问题提供了解决方案。
 
 ```js
 var a = 2;
@@ -188,7 +187,7 @@ var a = 2;
 console.log( a ); // 2
 ```
 
-Let's break down what's happening here.
+让我们看看这都发生了什么。
 
 First, notice that the wrapping function statement starts with `(function...` as opposed to just `function...`. While this may seem like a minor detail, it's actually a major change. Instead of treating the function as a standard declaration, the function is treated as a function-expression.
 
