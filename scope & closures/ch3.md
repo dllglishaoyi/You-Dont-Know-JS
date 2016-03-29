@@ -189,11 +189,9 @@ console.log( a ); // 2
 
 让我们看看这都发生了什么。
 
-首先，要注意的是包装函数表达式是以 `(function...`开始的而不是 `function...`。
+首先，要注意的是包装函数表达式是以 `(function...`开始的而不是 `function...`。这个看似微小的细节，实际上有很大的不同。相较于标准的函数声明，这个函数被当做一个函数表达式来对待。
 
-First, notice that the wrapping function statement starts with `(function...` as opposed to just `function...`. While this may seem like a minor detail, it's actually a major change. Instead of treating the function as a standard declaration, the function is treated as a function-expression.
-
-**Note:** The easiest way to distinguish declaration vs. expression is the position of the word "function" in the statement (not just a line, but a distinct statement). If "function" is the very first thing in the statement, then it's a function declaration. Otherwise, it's a function expression.
+**注释:**一个区别声明和表达式的最简单方法就是"function"单词在语句中的位置。如果"function"在语句最前端，那他就是函数声明。不然就是一个函数表达式。
 
 The key difference we can observe here between a function declaration and a function expression relates to where its name is bound as an identifier.
 
