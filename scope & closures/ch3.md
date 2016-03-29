@@ -117,17 +117,17 @@ function foo() {
 
 foo();
 ```
-在 `bar(..)`中`i = 3`的赋值意外覆盖了`foo(..)`中for循环里声明的`i`。此时，引发了一个死循环，因为`i`被赋予了一个固定值 `3` ，永远小于10
+在 `bar(..)`中`i = 3`的赋值意外覆盖了`foo(..)`中for循环里声明的`i`。此时，引发了一个死循环，因为`i`被赋予了一个固定值 `3` ，永远小于10。
 
-The assignment inside `bar(..)` needs to declare a local variable to use, regardless of what identifier name is chosen. `var i = 3;` would fix the problem (and would create the previously mentioned "shadowed variable" declaration for `i`). An *additional*, not alternate, option is to pick another identifier name entirely, such as `var j = 3;`. But your software design may naturally call for the same identifier name, so utilizing scope to "hide" your inner declaration is your best/only option in that case.
+`bar(..)`里的赋值需要声明一个本地变量，无所谓标识符叫什么名字。 `var i = 3;`能解决这个问题（会为`i`创建一个我们前面提到的“阴影变量”声明）。
 
-#### Global "Namespaces"
+#### 全局命名空间
 
-A particularly strong example of (likely) variable collision occurs in the global scope. Multiple libraries loaded into your program can quite easily collide with each other if they don't properly hide their internal/private functions and variables.
+在你程序中引入的多个类库如果不完全隐藏它们的内部/私有的方法和变量，和容易引起冲突。
 
-Such libraries typically will create a single variable declaration, often an object, with a sufficiently unique name, in the global scope. This object is then used as a "namespace" for that library, where all specific exposures of functionality are made as properties off that object (namespace), rather than as top-level lexically scoped identifiers themselves.
+这些类库通常会创建一个单独的变量声明，经常是一个在全局作用域中拥有唯一名字的对象。这个对象会运用是一个属于这个类库自己的“命名空间”，所有对外暴露的函数都表现为对象（命名空间）的属性，而不是顶层作用域中的标识符。
 
-For example:
+例如:
 
 ```js
 var MyReallyCoolLibrary = {
@@ -141,11 +141,11 @@ var MyReallyCoolLibrary = {
 };
 ```
 
-#### Module Management
+#### 模块管理
 
-Another option for collision avoidance is the more modern "module" approach, using any of various dependency managers. Using these tools, no libraries ever add any identifiers to the global scope, but are instead required to have their identifier(s) be explicitly imported into another specific scope through usage of the dependency manager's various mechanisms.
+另一种避免冲突的方法就是模块化，运用一些依赖管理器。通过运用这些工具，就再也不会有类库向全局作用域添加标识符了，但需要通过依赖管理器提供的机制指定引入标识符到具体的作用域中。
 
-It should be observed that these tools do not possess "magic" functionality that is exempt from lexical scoping rules. They simply use the rules of scoping as explained here to enforce that no identifiers are injected into any shared scope, and are instead kept in private, non-collision-susceptible scopes, which prevents any accidental scope collisions.
+你可能会注意到这些工具并没有什么可以摆脱词法作用域规则的魔法。它们只是运用了作用域规则来强制了标识符不能出现在共享的作用域中，保持标识符私有化，杜绝冲突污染的作用域，以此确保没有意外的作用域冲突。
 
 As such, you can code defensively and achieve the same results as the dependency managers do without actually needing to use them, if you so choose. See the Chapter 5 for more information about the module pattern.
 
