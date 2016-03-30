@@ -359,36 +359,34 @@ for (var i=0; i<10; i++) {
 ```
 为什么只在循环中使用的变量`i`会污染整个函数作用域？
 
-但更重要的是，
+但更重要的是，开发者们喜欢靠自己检查来排查不在他们意图范围内的变量使用，例如在一个错误的地方使用一个未知的变量会抛出一个错误。块级作用域（如果有的话）可以让变量 `i`只在循环内有效，在函数的其他地方使用 `i`会引发错误。这样能确保变量不在其他不好排查的地方重复使用。
 
-But more importantly, developers may prefer to *check* themselves against accidentally (re)using variables outside of their intended purpose, such as being issued an error about an unknown variable if you try to use it in the wrong place. Block-scoping (if it were possible) for the `i` variable would make `i` available only for the for-loop, causing an error if `i` is accessed elsewhere in the function. This helps ensure variables are not re-used in confusing or hard-to-maintain ways.
+但是，令人伤心的事实是，表面上，JavaScript没有块级作用域场景。
 
-But, the sad reality is that, on the surface, JavaScript has no facility for block scope.
-
-That is, until you dig a little further.
+除非，你更深入一点。
 
 ### `with`
 
-We learned about `with` in Chapter 2. While it is a frowned upon construct, it *is* an example of (a form of) block scope, in that the scope that is created from the object only exists for the lifetime of that `with` statement, and not in the enclosing scope.
+我们在第二章学过`with`。尽管它是个令人皱眉的结构，但它确实是一个块级作用域的例子，作用域在`with`块中，而不在包裹作用域中。
 
 ### `try/catch`
 
-It's a *very* little known fact that JavaScript in ES3 specified the variable declaration in the `catch` clause of a `try/catch` to be block-scoped to the `catch` block.
+这是个鲜为人知的事实，在ES3版本的JavaScript中的`try/catch`，`catch`块是一个块级作用域。
 
-For instance:
+例如:
 
 ```js
 try {
-	undefined(); // illegal operation to force an exception!
+	undefined(); // 强制引起异常的非法操作!
 }
 catch (err) {
-	console.log( err ); // works!
+	console.log( err ); // 起作用了!
 }
 
 console.log( err ); // ReferenceError: `err` not found
 ```
 
-As you can see, `err` exists only in the `catch` clause, and throws an error when you try to reference it elsewhere.
+如你所见， `err`只存在 `catch`分句子中，当你在别处引用它时会抛出异常。
 
 **Note:** While this behavior has been specified and true of practically all standard JS environments (except perhaps old IE), many linters seem to still complain if you have two or more `catch` clauses in the same scope which each declare their error variable with the same identifier name. This is not actually a re-definition, since the variables are safely block-scoped, but the linters still seem to, annoyingly, complain about this fact.
 
