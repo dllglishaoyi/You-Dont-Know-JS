@@ -245,11 +245,11 @@ var a = 2;
 console.log( a ); // 2
 ```
 
-Now that we have a function as an expression by virtue of wrapping it in a `( )` pair, we can execute that function by adding another `()` on the end, like `(function foo(){ .. })()`. The first enclosing `( )` pair makes the function an expression, and the second `()` executes the function.
+现在我们为函数加上一对括号使之成为函数表达式，我们可以通过在它后面在加上`()` 使函数执行，就像`(function foo(){ .. })()`。第一对括号生成一个函数表达式，第二对括号使函数执行。
 
-This pattern is so common, a few years ago the community agreed on a term for it: **IIFE**, which stands for **I**mmediately **I**nvoked **F**unction **E**xpression.
+只是一个很普通的模式，几年前在业界就为此有了一个术语：**IIFE**，代表了**I**mmediately **I**nvoked **F**unction **E**xpression（立即执行函数表达式）。
 
-Of course, IIFE's don't need names, necessarily -- the most common form of IIFE is to use an anonymous function expression. While certainly less common, naming an IIFE has all the aforementioned benefits over anonymous function expressions, so it's a good practice to adopt.
+当然，IIFE不一定需要名字，IIFE的通常格式就是用一个匿名函数表达式。虽然不是通常用法，但为IIFE命名也拥有上面所有匿名函数表达式的好处，所以不失为一个好的选择实践。
 
 ```js
 var a = 2;
@@ -263,14 +263,13 @@ var a = 2;
 
 console.log( a ); // 2
 ```
+这与通常的IIFE格式（`(function(){ .. }())`）相比有一些小差异。仔细看看有什么不同。第一个格式中，函数表达式被包裹在 `( )`中，然后执行括号对在它的外面。第二个格式中，执行括号对被移动到了包裹括号对里面。
 
-There's a slight variation on the traditional IIFE form, which some prefer: `(function(){ .. }())`. Look closely to see the difference. In the first form, the function expression is wrapped in `( )`, and then the invoking `()` pair is on the outside right after it. In the second form, the invoking `()` pair is moved to the inside of the outer `( )` wrapping pair.
+这两种格式在功能上都是相同的。**用哪一种完全出于你的格式喜好。**
 
-These two forms are identical in functionality. **It's purely a stylistic choice which you prefer.**
+IIFE另一个在实际中更常用的方式就是调用函数，并给他传入参数。
 
-Another variation on IIFE's which is quite common is to use the fact that they are, in fact, just function calls, and pass in argument(s).
-
-For instance:
+例如:
 
 ```js
 var a = 2;
@@ -286,9 +285,9 @@ var a = 2;
 console.log( a ); // 2
 ```
 
-We pass in the `window` object reference, but we name the parameter `global`, so that we have a clear stylistic delineation for global vs. non-global references. Of course, you can pass in anything from an enclosing scope you want, and you can name the parameter(s) anything that suits you. This is mostly just stylistic choice.
+我们传入了`window`对象的引用，但我们给参数命名为`global`，从而在文法上相较于非全局引用更清晰，你可以传入在包裹作用域的任何东西，然后为参数来一个恰当的命名。这更是一种文法风格的选择。
 
-Another application of this pattern addresses the (minor niche) concern that the default `undefined` identifier might have its value incorrectly overwritten, causing unexpected results. By naming a parameter `undefined`, but not passing any value for that argument, we can guarantee that the `undefined` identifier is in fact the undefined value in a block of code:
+这个模式的另一个应用就是防止因`undefined`标识符被不正确的重写而引起的意外结果。通过把参数命名为`undefined`而不传入参数，我们就能确保`undefined`标识符确实是undefined的值：
 
 ```js
 undefined = true; // setting a land-mine for other code! avoid!
@@ -302,8 +301,7 @@ undefined = true; // setting a land-mine for other code! avoid!
 
 })();
 ```
-
-Still another variation of the IIFE inverts the order of things, where the function to execute is given second, *after* the invocation and parameters to pass to it. This pattern is used in the UMD (Universal Module Definition) project. Some people find it a little cleaner to understand, though it is slightly more verbose.
+还有一种用法就是把函数作为参数传入。这种模式被应用在UMD（Universal Module Definition）项目中。有的人会觉得这样做更清晰和利用理解，尽管它有一些冗长：
 
 ```js
 var a = 2;
@@ -318,26 +316,25 @@ var a = 2;
 
 });
 ```
+`def`函数表达式在代码段的后半部分，被作为一个参数传入定义在代码段前半部分的`IIFE`函数。最后，参数`def`（函数）被执行，带着传入的参数`global`（`window`）。
 
-The `def` function expression is defined in the second-half of the snippet, and then passed as a parameter (also called `def`) to the `IIFE` function defined in the first half of the snippet. Finally, the parameter `def` (the function) is invoked, passing `window` in as the `global` parameter.
+## 块级作用域
 
-## Blocks As Scopes
+函数是最普通的作用域单元，当然，在广泛传播的JS设计方法中，还有别的作用域单元，运用这些作用域单元，可以让代码变得更加清晰可维护。
 
-While functions are the most common unit of scope, and certainly the most wide-spread of the design approaches in the majority of JS in circulation, other units of scope are possible, and the usage of these other scope units can lead to even better, cleaner to maintain code.
+很多JavaScript之外的语言都支持块级作用域，所以其他语言的开发者们对这个概念就有思维定势，而以JavaScript为主的开发者对这个概念可能会有点陌生。
 
-Many languages other than JavaScript support Block Scope, and so developers from those languages are accustomed to the mindset, whereas those who've primarily only worked in JavaScript may find the concept slightly foreign.
-
-But even if you've never written a single line of code in block-scoped fashion, you are still probably familiar with this extremely common idiom in JavaScript:
+但就算你一次也没写过块级作用域，你对JavaScript这段代码也肯定很熟悉。
 
 ```js
 for (var i=0; i<10; i++) {
 	console.log( i );
 }
 ```
+我们直接在循环的开头声明了变量 `i`，我们很可能只希望在这个循环中使用 `i`，但忽略了这个变量存在于包裹作用域（函数或全局对象）中。
 
-We declare the variable `i` directly inside the for-loop head, most likely because our *intent* is to use `i` only within the context of that for-loop, and essentially ignore the fact that the variable actually scopes itself to the enclosing scope (function or global).
-
-That's what block-scoping is all about. Declaring variables as close as possible, as local as possible, to where they will be used. Another example:
+这就是块级作用域。尽量在使用时就近声明变量。
+另一个例子:
 
 ```js
 var foo = true;
@@ -349,19 +346,20 @@ if (foo) {
 }
 ```
 
-We are using a `bar` variable only in the context of the if-statement, so it makes a kind of sense that we would declare it inside the if-block. However, where we declare variables is not relevant when using `var`, because they will always belong to the enclosing scope. This snippet is essentially "fake" block-scoping, for stylistic reasons, and relying on self-enforcement not to accidentally use `bar` in another place in that scope.
+我们只在if代码中用到了变量`bar`，这让人意识到我们应该在if块中声明`bar`。尽管我们在哪用 `var`来声明变量都没关系，因为他们都属于包裹作用域。这段代码实际上是一个“假的”块级作用域，应该自我强制不要在作用域的其他地方用到`bar`。
 
-Block scope is a tool to extend the earlier "Principle of Least ~~Privilege~~ Exposure" [^note-leastprivilege] from hiding information in functions to hiding information in blocks of our code.
+块级作用域是一个扩展前面提到“最小权限暴露原则”的工具，通过把在函数中隐藏信息变为在代码块中隐藏信息。
 
-Consider the for-loop example again:
+再看看前面的循环例子：
 
 ```js
 for (var i=0; i<10; i++) {
 	console.log( i );
 }
 ```
+为什么只在循环中使用的变量`i`会污染整个函数作用域？
 
-Why pollute the entire scope of a function with the `i` variable that is only going to be (or only *should be*, at least) used for the for-loop?
+但更重要的是，
 
 But more importantly, developers may prefer to *check* themselves against accidentally (re)using variables outside of their intended purpose, such as being issued an error about an unknown variable if you try to use it in the wrong place. Block-scoping (if it were possible) for the `i` variable would make `i` available only for the for-loop, causing an error if `i` is accessed elsewhere in the function. This helps ensure variables are not re-used in confusing or hard-to-maintain ways.
 
