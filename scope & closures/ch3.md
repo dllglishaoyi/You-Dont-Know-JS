@@ -193,15 +193,17 @@ console.log( a ); // 2
 
 **注释:**一个区别声明和表达式的最简单方法就是"function"单词在语句中的位置。如果"function"在语句最前端，那他就是函数声明。不然就是一个函数表达式。
 
-The key difference we can observe here between a function declaration and a function expression relates to where its name is bound as an identifier.
+我们可以发现函数声明和函数表达式的主要不同在于他们的名字在何处绑定为标识符。
 
-Compare the previous two snippets. In the first snippet, the name `foo` is bound in the enclosing scope, and we call it directly with `foo()`. In the second snippet, the name `foo` is not bound in the enclosing scope, but instead is bound only inside of its own function.
+对比前面的两段代码。第一段中的`foo`在环绕作用域中绑定。第二段中，`foo`不在环绕作用域中绑定，而是在他自己内部的方法中绑定。
 
-In other words, `(function foo(){ .. })` as an expression means the identifier `foo` is found *only* in the scope where the `..` indicates, not in the outer scope. Hiding the name `foo` inside itself means it does not pollute the enclosing scope unnecessarily.
+换句话说，`(function foo(){ .. })` 是一个表达式意味着`foo`标识符 *只能*在`..`的内部被找到，而不能在外部作用域中找到。 
 
-### Anonymous vs. Named
+In other words, `(function foo(){ .. })` as an expression means the identifier `foo` is found *only* in the scope where the `..`。 把`foo`的名字隐藏在它自己内部意味着它不会无故的污染环绕作用域。
 
-You are probably most familiar with function expressions as callback parameters, such as:
+### 匿名 vs. 声明的
+
+你可能最熟悉把函数表达式作为一个回调参数了吧，就像：
 
 ```js
 setTimeout( function(){
@@ -209,25 +211,26 @@ setTimeout( function(){
 }, 1000 );
 ```
 
-This is called an "anonymous function expression", because `function()...` has no name identifier on it. Function expressions can be anonymous, but function declarations cannot omit the name -- that would be illegal JS grammar.
+这被叫做“匿名函数表达式”，因为 `function()...`没有他自己的标识符。函数表达式可以是匿名的，但方法声明不能漏掉名字，因为那样会引起JS语法错误。
 
-Anonymous function expressions are quick and easy to type, and many libraries and tools tend to encourage this idiomatic style of code. However, they have several draw-backs to consider:
+匿名函数表达式很简单，很多类库和工具都鼓励使用这种惯用的编码风格。
+尽管它们需要考虑几个问题：
 
-1. Anonymous functions have no useful name to display in stack traces, which can make debugging more difficult.
+1. 匿名函数没有在追踪栈里留下有用的名字，这增大了调试难度。
 
-2. Without a name, if the function needs to refer to itself, for recursion, etc., the **deprecated** `arguments.callee` reference is unfortunately required. Another example of needing to self-reference is when an event handler function wants to unbind itself after it fires.
+2. 没有名字的情况下，当函数需要引用自己（诸如递归）时，就要不幸的用到`arguments.callee`这种已经**不推荐**的引用了。另一个函数需要自我引用的例子就是一个事件处理函数需要在触发之后解除绑定。
 
-3. Anonymous functions omit a name that is often helpful in providing more readable/understandable code. A descriptive name helps self-document the code in question.
+3. 匿名函数删掉了有利于代码可读性的名字。
 
-**Inline function expressions** are powerful and useful -- the question of anonymous vs. named doesn't detract from that. Providing a name for your function expression quite effectively addresses all these draw-backs, but has no tangible downsides. The best practice is to always name your function expressions:
+**行内函数表达式**是强大和有用的————但依然也引出很多问题，为你的函数表达式起个名字就能很好的解决。所以始终给你的函数表达式命名是一个最佳的实践：
 
 ```js
-setTimeout( function timeoutHandler(){ // <-- Look, I have a name!
+setTimeout( function timeoutHandler(){ // <-- 瞧，我有一个名字!
 	console.log( "I waited 1 second!" );
 }, 1000 );
 ```
 
-### Invoking Function Expressions Immediately
+### 立即执行函数表达式
 
 ```js
 var a = 2;
