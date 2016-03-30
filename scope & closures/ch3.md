@@ -388,19 +388,12 @@ console.log( err ); // ReferenceError: `err` not found
 
 如你所见， `err`只存在 `catch`分句子中，当你在别处引用它时会抛出异常。
 
-**Note:** While this behavior has been specified and true of practically all standard JS environments (except perhaps old IE), many linters seem to still complain if you have two or more `catch` clauses in the same scope which each declare their error variable with the same identifier name. This is not actually a re-definition, since the variables are safely block-scoped, but the linters still seem to, annoyingly, complain about this fact.
-
-To avoid these unnecessary warnings, some devs will name their `catch` variables `err1`, `err2`, etc. Other devs will simply turn off the linting check for duplicate variable names.
-
-The block-scoping nature of `catch` may seem like a useless academic fact, but see Appendix B for more information on just how useful it might be.
-
 ### `let`
+目前为止，我们在探索块级作用域的过程中看到了很多怪异的行为。如果只是这些的话，块级作用域对JavaScript开发者就没什么大用了。
 
-Thus far, we've seen that JavaScript only has some strange niche behaviors which expose block scope functionality. If that were all we had, and *it was* for many, many years, then block scoping would not be terribly useful to the JavaScript developer.
+幸运的是，ES6改变了这一切，它引入了`let`关键字，是`var`之外的另一种声明变量的方式。
 
-Fortunately, ES6 changes that, and introduces a new keyword `let` which sits alongside `var` as another way to declare variables.
-
-The `let` keyword attaches the variable declaration to the scope of whatever block (commonly a `{ .. }` pair) it's contained in. In other words, `let` implicitly hijacks any block's scope for its variable declaration.
+`let`关键字声明的变量是块级作用域有效的。
 
 ```js
 var foo = true;
@@ -413,10 +406,9 @@ if (foo) {
 
 console.log( bar ); // ReferenceError
 ```
+用`let`来使变量依附块级作用域多少有些含蓄。当你没有太在意变量属于哪个作用域是可能会引起困惑，用新的块把它们包裹起来是一个进化你新代码的好习惯。
 
-Using `let` to attach a variable to an existing block is somewhat implicit. It can confuse if you're not paying close attention to which blocks have variables scoped to them, and are in the habit of moving blocks around, wrapping them in other blocks, etc., as you develop and evolve code.
-
-Creating explicit blocks for block-scoping can address some of these concerns, making it more obvious where variables are attached and not. Usually, explicit code is preferable over implicit or subtle code. This explicit block-scoping style is easy to achieve, and fits more naturally with how block-scoping works in other languages:
+为块级作用域创建明确的块可以打消这些担忧:
 
 ```js
 var foo = true;
