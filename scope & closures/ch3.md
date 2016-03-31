@@ -565,24 +565,25 @@ if (foo) {
 
 ### `const`
 
-In addition to `let`, ES6 introduces `const`, which also creates a block-scoped variable, but whose value is fixed (constant). Any attempt to change that value at a later time results in an error.
+作为`let`的补充，ES6引入了`const`关键字，它也能创建块级作用域变量，但它的值是固定的。任何试图改变`const`值得操作都会引起系统报错。
 
 ```js
 var foo = true;
 
 if (foo) {
 	var a = 2;
-	const b = 3; // block-scoped to the containing `if`
+	const b = 3; // 存在于if的块级作用域中
 
-	a = 3; // just fine!
-	b = 4; // error!
+	a = 3; // 没问题!
+	b = 4; // 报错!
 }
 
 console.log( a ); // 3
 console.log( b ); // ReferenceError!
 ```
 
-## Review (TL;DR)
+## 总结
+
 
 Functions are the most common unit of scope in JavaScript. Variables and functions that are declared inside another function are essentially "hidden" from any of the enclosing "scopes", which is an intentional design principle of good software.
 
