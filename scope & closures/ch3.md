@@ -584,15 +584,12 @@ console.log( b ); // ReferenceError!
 
 ## 总结
 
+函数是JavaScript中最普通的作用域单元。在函数中声明的变量和函数会被对外“隐藏”起来，这是一种很好的软件设计原则。
 
-Functions are the most common unit of scope in JavaScript. Variables and functions that are declared inside another function are essentially "hidden" from any of the enclosing "scopes", which is an intentional design principle of good software.
+但函数不是唯一的作用域单元。块级作用域就是用块（通常为 `{ .. }`对）包裹代码，而不单单是包裹函数。
 
-But functions are by no means the only unit of scope. Block-scope refers to the idea that variables and functions can belong to an arbitrary block (generally, any `{ .. }` pair) of code, rather than only to the enclosing function.
+从ES3开始，`try/catch`结构的`catch`就形成了一个块级作用域。
 
-Starting with ES3, the `try/catch` structure has block-scope in the `catch` clause.
+在ES6中，`let`关键字（`var`关键字的表亲），就被引入用来在任何代码块中声明变量。 `if (..) { let a = 2; }`声明了一个变量 `a`，它实际上劫持了`if`的 `{ .. }`块并且把自己依附在上面。
 
-In ES6, the `let` keyword (a cousin to the `var` keyword) is introduced to allow declarations of variables in any arbitrary block of code. `if (..) { let a = 2; }` will declare a variable `a` that essentially hijacks the scope of the `if`'s `{ .. }` block and attaches itself there.
-
-Though some seem to believe so, block scope should not be taken as an outright replacement of `var` function scope. Both functionalities co-exist, and developers can and should use both function-scope and block-scope techniques where respectively appropriate to produce better, more readable/maintainable code.
-
-[^note-leastprivilege]: [Principle of Least Privilege](http://en.wikipedia.org/wiki/Principle_of_least_privilege)
+块级作用域不应该取代函数作域。两种功能应该并存，开发者们应该用好函数作用域和块级作用域在各自适合的场景去生产更好，更可读可维护的代码。
