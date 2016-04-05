@@ -1,11 +1,11 @@
 # You Don't Know JS: Scope & Closures
-# Chapter 4: Hoisting
+# 第四章: 声明提升
 
-By now, you should be fairly comfortable with the idea of scope, and how variables are attached to different levels of scope depending on where and how they are declared. Both function scope and block scope behave by the same rules in this regard: any variable declared within a scope is attached to that scope.
+目前为止，你应该相当熟悉作用域了，还有变量是怎么根据声明位置依附到不同层级的作用域上的。函数作用域和块级作用域都遵循一个规则：任何在作用域中的变量都会被依附在这个作用域上。
 
-But there's a subtle detail of how scope attachment works with declarations that appear in various locations within a scope, and that detail is what we will examine here.
+但这里有一个细节，当声明出现在作用域的不同位置时，作用域依附是怎么工作的，这就是我们马上要讨论的细节。
 
-## Chicken Or The Egg?
+## 先有鸡还是先有蛋?
 
 There's a temptation to think that all of the code you see in a JavaScript program is interpreted line-by-line, top-down in order, as the program executes. While that is substantially true, there's one part of that assumption which can lead to incorrect thinking about your program.
 
